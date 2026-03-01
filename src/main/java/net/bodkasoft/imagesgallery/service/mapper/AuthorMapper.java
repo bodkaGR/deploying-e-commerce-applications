@@ -25,8 +25,6 @@ public interface AuthorMapper {
 
     List<AuthorEntry> toAuthorsEntry(List<Author> authors);
 
-    @Mapping(target = "id", source = "id")
-    @Mapping(target = "name", source = "name")
     AuthorEntry toAuthorEntry(Author author);
 
     List<Author> toAuthorsList(List<AuthorEntity> authorEntities);
