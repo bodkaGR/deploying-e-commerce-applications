@@ -1,7 +1,7 @@
 package net.bodkasoft.imagesgallery.service;
 
 import net.bodkasoft.imagesgallery.domain.author.Author;
-import net.bodkasoft.imagesgallery.dto.author.AuthorEntryDto;
+import net.bodkasoft.imagesgallery.dto.author.AuthorDto;
 
 import java.util.List;
 import java.util.UUID;
@@ -12,7 +12,7 @@ public interface AuthorService {
 
     Author getAuthorById(UUID id);
 
-    Author createAuthor(AuthorEntryDto author);
+    Author createAuthor(AuthorDto author);
 
     void deleteAuthorById(UUID id);
 

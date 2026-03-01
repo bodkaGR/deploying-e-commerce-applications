@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 @Value
 @Builder
 @Jacksonized
-public class AuthorEntryDto {
+public class AuthorDto {
 
     @NotBlank(message = "Name is mandatory")
     @Size(max = 100, message = "Name cannot exceed 100 characters")
