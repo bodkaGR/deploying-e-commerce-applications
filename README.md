@@ -36,16 +36,16 @@ java -jar target/images-gallery-0.0.1-SNAPSHOT.jar
 The application uses **Spring Boot Actuator** to monitor the service status and database connectivity.
 
 ### Database Connected (200 OK)
-When PostgreSQL is running normally, the `/actuator/health/database` endpoint returns an `UP` status.
+When PostgreSQL is running normally, the `health/database` endpoint returns an `UP` status.
 
-**Command:** `curl -i localhost:8080/actuator/health/database`
+**Command:** `curl -i localhost:8080/health/database`
 
 ![Health Check 200](docs/health-check-200.png)
 
 ### Database Stopped (503 Service Unavailable)
 If the database connection is lost (DB stopped manually), Actuator changes the status to `DOWN`.
 
-**Command:** `curl -i localhost:8080/actuator/health/database`
+**Command:** `curl -i localhost:8080/health/database`
 
 ![Health Check 503](docs/health-check-503.png)
 
