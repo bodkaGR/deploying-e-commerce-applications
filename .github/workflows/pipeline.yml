@@ -9,7 +9,7 @@ on:
 env:
   REGISTRY: ghcr.io
   OWNER: bohdanhrontkovskyi
-  IMAGE_NAME: ghcr.io/${{ env.OWNER }}/ecommerce-app
+  IMAGE_NAME: ghcr.io/bohdanhrontkovskyi/ecommerce-app
 
 permissions:
   contents: read
