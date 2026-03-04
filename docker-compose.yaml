@@ -1,22 +1,40 @@
 version: '3.9'
 
 services:
-  postgres:
-    image: postgres:latest
-    container_name: images-gallery-postgres
+  db:
+    image: postgres:16-alpine
+    container_name: db
+    restart: always
     environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: images-gallery
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: user123
     ports:
-      - "${DB_PORT}:5432"
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
+      test: [ "CMD-SHELL", "pg_isready -U user" ]
       interval: 5s
       timeout: 5s
       retries: 5
+      start_period: 10s
+
+  app:
+    build: .
+    container_name: app
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: images-gallery
+      DB_USER: user
+      DB_PASSWORD: user123
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   postgres_data:
