@@ -2,7 +2,7 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main]
+    branches: [main, lab-2-cicd-automation-container-registry]
   pull_request:
     branches: [main]
 
