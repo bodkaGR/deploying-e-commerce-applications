@@ -2,7 +2,7 @@ name: Kubernetes Lab 3
 
 on:
   push:
-    branches: [main, lab-2-cicd-automation-container-registry]
+    branches: [main, lab-3-kubernetes-deployment-essentials]
   pull_request:
     branches: [main]
 
