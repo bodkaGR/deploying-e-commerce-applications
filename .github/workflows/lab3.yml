@@ -1,0 +1,65 @@
+name: Kubernetes Lab 3
+
+on:
+  push:
+    branches: [main, lab-3-kubernetes-deployment-essentials]
+  pull_request:
+    branches: [main]
+
+jobs:
+  k8s:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Create KinD cluster
+        uses: helm/kind-action@v1
+        with:
+          cluster_name: images-gallery-cluster
+
+      - name: Check cluster
+        run: kubectl cluster-info
+
+      - name: Load app image to Kind
+        run: |
+          docker pull ghcr.io/bodkagr/ecommerce-app:latest
+          kind load docker-image ghcr.io/bodkagr/ecommerce-app:latest --name images-gallery-cluster
+
+      - name: Deploy PostgreSQL
+        run: |
+          kubectl apply -f k8s/configmap.yml
+          kubectl apply -f k8s/secret.yml
+          kubectl apply -f k8s/postgres-pvc.yml
+          kubectl apply -f k8s/postgres-deployment.yml
+          kubectl apply -f k8s/postgres-service.yml
+
+      - name: Wait for PostgreSQL readiness
+        run: |
+          kubectl wait --for=condition=ready pod -l app=postgres --timeout=120s
+
+      - name: Apply app manifests
+        run: |
+          kubectl apply -f k8s/deployment.yml
+          kubectl apply -f k8s/service.yml
+
+      - name: Wait for app pods to start
+        run: sleep 30
+
+      - name: Debug pods
+        run: |
+          echo "### Pods ###"
+          kubectl get pods
+          echo "### Pod Description ###"
+          kubectl describe pods
+          echo "### Pod Logs ###"
+          kubectl logs -l app=ecommerce --tail=50 || true
+
+      - name: Run Master Validation Script
+        run: |
+          chmod +x ./tests/lab3_test.sh
+          ./tests/lab3_test.sh
