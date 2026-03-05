@@ -18,7 +18,7 @@ jobs:
         uses: azure/setup-kubectl@v4
 
       - name: Create KinD cluster
-        uses: helm/kind-action@v4
+        uses: helm/kind-action@v1
         with:
           cluster-name: images-gallery-cluster
 
