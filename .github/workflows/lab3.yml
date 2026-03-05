@@ -28,10 +28,19 @@ jobs:
       - name: Apply Kubernetes manifests
         run: kubectl apply -f k8s/
 
+      - name: Debug pods
+        run: |
+          echo "### Pods ###"
+          kubectl get pods
+          echo "### Pod Description ###"
+          kubectl describe pods
+          echo "### Pod Logs ###"
+          kubectl logs -l app=ecommerce --tail=50 || true
+
       - name: Wait for deployments
         run: |
-          kubectl rollout status deployment/postgres
-          kubectl rollout status deployment/ecommerce-app
+          kubectl rollout status deployment/postgres --timeout=120s
+          kubectl rollout status deployment/ecommerce-app --timeout=120s
 
       - name: Run Master Validation Script
         run: |
