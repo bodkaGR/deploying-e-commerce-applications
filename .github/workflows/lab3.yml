@@ -25,8 +25,30 @@ jobs:
       - name: Check cluster
         run: kubectl cluster-info
 
-      - name: Apply Kubernetes manifests
-        run: kubectl apply -f k8s/
+      - name: Load app image to Kind
+        run: |
+          docker pull ghcr.io/bodkagr/ecommerce-app:latest
+          kind load docker-image ghcr.io/bodkagr/ecommerce-app:latest --name images-gallery-cluster 
+
+      - name: Deploy PostgreSQL
+        run: |
+          kubectl apply -f k8s/configmap.yml
+          kubectl apply -f k8s/secret.yml
+          kubectl apply -f k8s/postgres-pvc.yml
+          kubectl apply -f k8s/postgres-deployment.yml
+          kubectl apply -f k8s/postgres-service.yml
+
+      - name: Wait for PostgreSQL readiness
+        run: |
+          kubectl wait --for=condition=ready pod -l app=postgres --timeout=120s
+
+      - name: Apply app manifests
+        run: |
+          kubectl apply -f k8s/deployment.yml
+          kubectl apply -f k8s/service.yml
+
+      - name: Wait for app pods to start
+        run: sleep 30
 
       - name: Debug pods
         run: |
@@ -36,11 +58,6 @@ jobs:
           kubectl describe pods
           echo "### Pod Logs ###"
           kubectl logs -l app=ecommerce --tail=50 || true
-
-      - name: Wait for deployments
-        run: |
-          kubectl rollout status deployment/postgres --timeout=120s
-          kubectl rollout status deployment/ecommerce-app --timeout=120s
 
       - name: Run Master Validation Script
         run: |

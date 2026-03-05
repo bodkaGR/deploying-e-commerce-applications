@@ -3,6 +3,6 @@ kind: ConfigMap
 metadata:
   name: ecommerce-config
 data:
-  DB_HOST: "db"
+  DB_HOST: "postgres"
   DB_NAME: "images-gallery"
   DB_PORT: "5432"
