@@ -19,11 +19,11 @@ jobs:
 
       - name: Lint Helm chart
         run: |
-          helm lint helm/ecommerce-chart
+          helm lint charts/ecommerce-chart
 
       - name: Render Helm templates
         run: |
-          helm template ecommerce helm/ecommerce-chart
+          helm template ecommerce charts/ecommerce-chart
 
       - name: Run validation script
         run: |
