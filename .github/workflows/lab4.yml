@@ -1,0 +1,31 @@
+name: Helm Charts & Templating
+
+on:
+  push:
+    branches: [main, lab-4-helm-charts-templating]
+  pull_request:
+    branches: [main]
+
+jobs:
+  helm-charts:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+
+      - name: Lint Helm chart
+        run: |
+          helm lint charts/ecommerce-app
+
+      - name: Render Helm templates
+        run: |
+          helm template ecommerce charts/ecommerce-app
+
+      - name: Run validation script
+        run: |
+          chmod +x ./tests/lab4_test.sh
+          ./tests/lab4_test.sh
